@@ -46,13 +46,13 @@ public class UserController {
 		binder.addValidators(userCustomValidator);
 	}
 
-//	@RequestMapping(method = RequestMethod.POST)
-//	public ResponseEntity<?> createUser(@Valid @RequestBody UserEntity user) {
-//		userRepository.save(user);
-//		return new ResponseEntity<>(user, HttpStatus.CREATED);
-//	}
+	@RequestMapping(method = RequestMethod.POST, path = "/noBind")
+	public ResponseEntity<?> createUser(@Valid @RequestBody UserEntity user) {
+		userRepository.save(user);
+		return new ResponseEntity<>(user, HttpStatus.CREATED);
+	}
 
-	@RequestMapping(method = RequestMethod.POST)
+	@RequestMapping(method = RequestMethod.POST, path = "/bind")
 	// ako prilikom parsiranja dodje do grešaka, one se upisuju u *BindingResult result*
 	// pravimo novi *ResponseEntity* i dajemo mu taj *result*
 	public ResponseEntity<?> createUser(@Valid @RequestBody UserEntity user, BindingResult result) {
