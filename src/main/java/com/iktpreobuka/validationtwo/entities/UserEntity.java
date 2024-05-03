@@ -30,7 +30,7 @@ public class UserEntity {
 	@Column(nullable = false)
 	private String lastName;
 	
-	@NotNull(message = "Email must not be blank or null")
+	@NotNull(message = "Email must not be blank nor null")
 	@Email(message = "Email is not valid.")
 	//@Pattern(regexp = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"+ "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$",
 	//		message="Email is not valid.")
@@ -61,7 +61,6 @@ public class UserEntity {
 
 	public UserEntity() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
 	public UserEntity(String firstName, String lastName, String email, String username, String password, Integer age) {
