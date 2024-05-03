@@ -78,6 +78,7 @@ public class UserController {
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	@ExceptionHandler(MethodArgumentNotValidException.class)
 	public Map<String, String> handleValidationExceptions(MethodArgumentNotValidException ex) {
+
 		Map<String, String> errors = new HashMap<>();
 		ex.getBindingResult().getAllErrors().forEach((error) -> {
 			String fieldName = ((FieldError) error).getField();
@@ -85,6 +86,26 @@ public class UserController {
 			errors.put(fieldName, errorMessage);
 		});
 		return errors;
+
+		/*
+		// ovo nam neće lepo ispisati grešku jer je očekuje nad nekim određenim poljem
+		// a mi je hvatamo kao globalnu grešku
+
+		Map<String, String> errors = new HashMap<>();
+		ex.getBindingResult().getAllErrors().forEach((error) -> {
+		String fieldName="";
+		try {
+			fieldName = ((FieldError) error).getField();
+		} catch (Exception e) {
+			fieldName = "No particular field";
+		}
+		String errorMessage = error.getDefaultMessage();
+		errors.put(fieldName, errorMessage);
+		});
+		return errors;
+		}
+		*/
+
 	}
 
 	@RequestMapping(method = RequestMethod.GET, value = "/minAge")
