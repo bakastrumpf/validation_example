@@ -42,15 +42,21 @@ public class UserController {
 	}
 
 	@RequestMapping(method = RequestMethod.POST)
-	// ako prilikom parsiranja dodje do grešaka, one se upisuju u *BindingResult result*
-	// pravimo novi *ResponseEntity* i dajemo mu taj *result*
-	public ResponseEntity<?> createUser(@Valid @RequestBody UserEntity user, BindingResult result) {
-		if (result.hasErrors()) {
-			return new ResponseEntity<>(createErrorMessage(result), HttpStatus.BAD_REQUEST);
-		} 
+	public ResponseEntity<?> createUser(@Valid @RequestBody UserEntity user) {
 		userRepository.save(user);
 		return new ResponseEntity<>(user, HttpStatus.CREATED);
 	}
+
+//	@RequestMapping(method = RequestMethod.POST)
+//	// ako prilikom parsiranja dodje do grešaka, one se upisuju u *BindingResult result*
+//	// pravimo novi *ResponseEntity* i dajemo mu taj *result*
+//	public ResponseEntity<?> createUser(@Valid @RequestBody UserEntity user, BindingResult result) {
+//		if (result.hasErrors()) {
+//			return new ResponseEntity<>(createErrorMessage(result), HttpStatus.BAD_REQUEST);
+//		}
+//		userRepository.save(user);
+//		return new ResponseEntity<>(user, HttpStatus.CREATED);
+//	}
 
 	// kad nam vrati listu grešaka, od nje pravimo *stream*
 	// pa svaki element tog toka mapiramo na *ObjectError*
@@ -60,6 +66,10 @@ public class UserController {
 		return result.getAllErrors().stream().map(ObjectError::getDefaultMessage).collect(Collectors.joining("\n"));
 	}
 
+	// kad vrati mapu grešaka, to je ekvivalent kao da nemamo anotaciju @ResponseStatus
+	// a da vraćamo ResponseEntity - mapu - i HTTPStatus.BAD_REQUEST
+	// vraćamo normalan objekat koji se zapakuje u ResponseEntity sa statusom HTTP
+	// ne radimo eksplicitno sa strimovima već prolazimo kroz rezultate pomoću FOR EACH
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	@ExceptionHandler(MethodArgumentNotValidException.class)
 	public Map<String, String> handleValidationExceptions(MethodArgumentNotValidException ex) {
