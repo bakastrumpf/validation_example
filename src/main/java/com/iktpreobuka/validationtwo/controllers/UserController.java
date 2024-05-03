@@ -42,6 +42,8 @@ public class UserController {
 	}
 
 	@RequestMapping(method = RequestMethod.POST)
+	// ako prilikom parsiranja dodje do grešaka, one se upisuju u *BindingResult result*
+	// pravimo novi *ResponseEntity* i dajemo mu taj *result*
 	public ResponseEntity<?> createUser(@Valid @RequestBody UserEntity user, BindingResult result) {
 		if (result.hasErrors()) {
 			return new ResponseEntity<>(createErrorMessage(result), HttpStatus.BAD_REQUEST);
@@ -50,6 +52,10 @@ public class UserController {
 		return new ResponseEntity<>(user, HttpStatus.CREATED);
 	}
 
+	// kad nam vrati listu grešaka, od nje pravimo *stream*
+	// pa svaki element tog toka mapiramo na *ObjectError*
+	// iz *ObjectError* izvlačimo podrazumevanu poruku
+	// skupljamo ih i spajamo tako što stavljamo novi red posle svake
 	private String createErrorMessage(BindingResult result) {
 		return result.getAllErrors().stream().map(ObjectError::getDefaultMessage).collect(Collectors.joining("\n"));
 	}
