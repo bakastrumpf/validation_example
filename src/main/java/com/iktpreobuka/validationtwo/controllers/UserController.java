@@ -36,27 +36,28 @@ public class UserController {
 	@Autowired
 	private UserCustomValidator userCustomValidator;
 
+	// injektuujemo userCustomValidator
 	@InitBinder
 	protected void initBinder(final WebDataBinder binder) {
 		binder.addValidators(userCustomValidator);
 	}
 
-	@RequestMapping(method = RequestMethod.POST)
-	public ResponseEntity<?> createUser(@Valid @RequestBody UserEntity user) {
-		userRepository.save(user);
-		return new ResponseEntity<>(user, HttpStatus.CREATED);
-	}
-
 //	@RequestMapping(method = RequestMethod.POST)
-//	// ako prilikom parsiranja dodje do grešaka, one se upisuju u *BindingResult result*
-//	// pravimo novi *ResponseEntity* i dajemo mu taj *result*
-//	public ResponseEntity<?> createUser(@Valid @RequestBody UserEntity user, BindingResult result) {
-//		if (result.hasErrors()) {
-//			return new ResponseEntity<>(createErrorMessage(result), HttpStatus.BAD_REQUEST);
-//		}
+//	public ResponseEntity<?> createUser(@Valid @RequestBody UserEntity user) {
 //		userRepository.save(user);
 //		return new ResponseEntity<>(user, HttpStatus.CREATED);
 //	}
+
+	@RequestMapping(method = RequestMethod.POST)
+	// ako prilikom parsiranja dodje do grešaka, one se upisuju u *BindingResult result*
+	// pravimo novi *ResponseEntity* i dajemo mu taj *result*
+	public ResponseEntity<?> createUser(@Valid @RequestBody UserEntity user, BindingResult result) {
+		if (result.hasErrors()) {
+			return new ResponseEntity<>(createErrorMessage(result), HttpStatus.BAD_REQUEST);
+		}
+		userRepository.save(user);
+		return new ResponseEntity<>(user, HttpStatus.CREATED);
+	}
 
 	// kad nam vrati listu grešaka, od nje pravimo *stream*
 	// pa svaki element tog toka mapiramo na *ObjectError*
