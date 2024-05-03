@@ -36,7 +36,11 @@ public class UserController {
 	@Autowired
 	private UserCustomValidator userCustomValidator;
 
-	// injektuujemo userCustomValidator
+	// injektujemo userCustomValidator
+	// initBinder presreće zahtev koji stiže i radi nešto s njim
+	// kad se kontroler bude inicijalizovao, presrećemo tu inicijalizaciju
+	// i u taj *initBinder* dodajemo naš validator
+	// to znamo jer tako Spring funkcioniše :)
 	@InitBinder
 	protected void initBinder(final WebDataBinder binder) {
 		binder.addValidators(userCustomValidator);
